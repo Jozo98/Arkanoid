@@ -2,64 +2,70 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
+import utility.KollisionsChecker;
 
 import java.awt.*;
 
 public class Ball extends Entitaet {
 
     int size;
+    int geschwindigkeitX;
+    int geschwindigkeitY;
+    Spieler spieler;
+    KollisionsChecker kollisionsChecker;
 
-    public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, int size) {
+    public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, int size, KollisionsChecker kollisionsChecker) {
 
         this.gp = gp;
         this.keyH = keyH;
         this.spieler = spieler;
         this.size = size;
+        this.kollisionsChecker = kollisionsChecker;
+        this.geschwindigkeit = 5;
 
         setDefaultValues();
     }
     @Override
     public void setDefaultValues() {
-        x = 0;
-        y = 100;
-        speedX = 4;
-        speedY = 6;
+        x = 100;
+        y = 150;
+        geschwindigkeitX = 5;
+        geschwindigkeitY = 8;
     }
     @Override
     public void update() {
 
-        x += speedX;
-        y += speedY;
+        x += geschwindigkeitX;
+        y += geschwindigkeitY;
 
-        if (x < 0 || x + size > gp.screenWidth) {
-            speedX *= -1;
+
+        if (x < gp.tileSize || x + size > gp.screenWidth - gp.tileSize) {
+            geschwindigkeitX *= -1;
         }
         if (y < 0) {
-            speedY *= -1;
+            geschwindigkeitY *= -1;
         }
 
-        if (ballCollidesWithPlayer()) {
-            if (x + size <= spieler.getPositionX() + speedX * 2|| x >= spieler.getPositionX() + gp.tileSize * 2 + speedX * 2) {
-                speedY *= -1;
-                speedX *= -1;
+        if (kollisionsChecker.ballCollidesWithPlayer(this)) {
+            if (x + size <= spieler.getPositionX() + geschwindigkeitX * 2 || x >= spieler.getPositionX() + gp.tileSize * 2 + geschwindigkeitX * 2) {
+                geschwindigkeitY *= -1;
+                geschwindigkeitX *= -1;
             } else {
-                speedY *= -1;
+                geschwindigkeitY *= -1;
+            }
+        }
+        int i = kollisionsChecker.ballCollidesWithStein(this);
+        if (i > -1) {
+
+            // bounce logic
+            if (kollisionsChecker.ballCollidesWithSteinFromSide(this, i)) {
+                geschwindigkeitX *= -1;
+            } else {
+                geschwindigkeitY *= -1;
             }
         }
     }
 
-    public boolean ballCollidesWithPlayer() {
-
-        Rectangle ballRect = new Rectangle(x, y, size, size);
-        Rectangle playerRect = new Rectangle(
-                spieler.getPositionX(),
-                spieler.getPositionY(),
-                gp.tileSize * 2,
-                gp.tileSize / 2
-        );
-
-        return ballRect.intersects(playerRect);
-    }
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.red);
@@ -72,5 +78,21 @@ public class Ball extends Entitaet {
 
     public int getPositionY() {
         return y;
+    }
+
+    public void  setPositionX(int x) {
+        this.x = x;
+    }
+    public void setPositionY(int y) {
+        this.y = y;
+    }
+    public int getSize() {
+        return size;
+    }
+    public void setSize(int size) {
+        this.size = size;
+    }
+    public int getGeschwindigkeitX() {
+        return geschwindigkeitX;
     }
 }

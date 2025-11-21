@@ -6,39 +6,20 @@ import java.awt.*;
 
 public class Stein extends Entitaet {
 
-    Ball ball;
-    boolean sichtbar;
-
-    public Stein(GamePanel gp, Ball ball, int x, int y) {
+    public Stein(GamePanel gp, int x, int y) {
 
         this.gp = gp;
-        this.ball = ball;
         this.x = x;
         this.y = y;
-        this.sichtbar = true;
-    }
-    @Override
-    public void update() {
-        if (ballCollidesWithStein()) {
-            sichtbar = false;
-        }
     }
 
-    public boolean ballCollidesWithStein() {
-        Rectangle ballRect = new Rectangle(x, y, gp.tileSize * 3, gp.tileSize / 2);
-        Rectangle playerRect = new Rectangle(
-                ball.getPositionX(),
-                ball.getPositionY(),
-                ball.size,
-                ball.size
-        );
-
-        return ballRect.intersects(playerRect);
-    }
-    @Override
-    public void draw(Graphics2D g2) {
-        if (!sichtbar) return;
+    public void renderSteinImage(Graphics2D g2) {
         g2.setColor(Color.yellow);
-        g2.fillRect(x, y, gp.tileSize * 3, gp.tileSize / 2);
+        g2.fillRect(x, y, gp.tileSize, gp.tileSize / 2);
     }
+
+    public int  getPositionX() {return x;}
+
+    public int getPositionY() {return y;}
+
 }

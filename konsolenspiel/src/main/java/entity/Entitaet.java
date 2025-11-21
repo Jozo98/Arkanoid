@@ -8,10 +8,7 @@ import java.awt.*;
 public class Entitaet {
 
     public int x, y;
-    public int speed;
-    public int speedX;
-    public int speedY;
-    Spieler spieler;
+    public int geschwindigkeit;
     GamePanel gp;
     KeyHandler keyH;
 

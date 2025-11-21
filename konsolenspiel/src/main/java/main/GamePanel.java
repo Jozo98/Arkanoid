@@ -1,11 +1,8 @@
 package main;
-
-import entity.Ball;
-import entity.Spieler;
 import entity.Stein;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.VolatileImage;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -13,20 +10,18 @@ public class GamePanel extends JPanel implements Runnable {
     final int scale = 3;
 
     public final int tileSize = originalTitleSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
+    final int maxScreenCol = 14;
+    final int maxScreenRow = 16;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
+    private VolatileImage steineImage;
+
 
     final double FPS = 60;
 
+    Game game;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
-    Spieler spieler = new Spieler(this, keyH);
-    Ball ball = new Ball(this, keyH, spieler, 20);
-    Stein stein = new Stein(this, ball, 300, 40);
-    Stein stein1 = new Stein(this, ball, 600, 40);
-    Stein stein2 = new Stein(this, ball, 10, 40);
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -34,6 +29,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        game = new Game(this, keyH);
+        buildSteineImage();
     }
 
     public void startGameThread() {
@@ -50,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
 
-            update();
+            game.update(this);
 
             repaint();
 
@@ -71,22 +68,39 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void update() {
-        spieler.update();
-        ball.update();
-        stein.update();
-        stein1.update();
-        stein2.update();
-    }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        spieler.draw(g2);
-        ball.draw(g2);
-        stein.draw(g2);
-        stein1.draw(g2);
-        stein2.draw(g2);
+        g2.drawImage(steineImage, 0, 0, null);
+        game.getSpieler().draw(g2);
+        game.getBall().draw(g2);
+    }
+
+    private void buildSteineImage() {
+        // Use opaque image for speed
+        steineImage = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration()
+                .createCompatibleVolatileImage(screenWidth, screenHeight, Transparency.OPAQUE);
+
+        Graphics2D g2 = steineImage.createGraphics();
+        g2.setColor(Color.BLACK); // background
+        g2.fillRect(0, 0, screenWidth, screenHeight);
+
+        // Draw all bricks once
+        for (Stein stein : game.getSteine()) {
+            stein.renderSteinImage(g2);
+        }
+
+        g2.dispose();
+    }
+
+    public void removeSteinFromImage(Stein removed) {
+        if (removed == null) return;
+        Graphics2D g2 = steineImage.createGraphics();
+        g2.setColor(Color.BLACK);
+        g2.fillRect(removed.getPositionX(), removed.getPositionY(),
+                tileSize, tileSize / 2);
         g2.dispose();
     }
 }
