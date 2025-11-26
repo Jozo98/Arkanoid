@@ -30,10 +30,10 @@ public class Game {
     private void addSteine(GamePanel gp) {
         int y = 10;
         int abstand = 10;
-        for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 3; i++) {
             int x = 58;
             y += 26;
-            for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
                 steine.add(new Stein(gp, x, y));
                 x += abstand + 40;
             }
