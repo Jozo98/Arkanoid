@@ -9,8 +9,9 @@ import java.awt.*;
 public class Ball extends Entitaet {
 
     int size;
-    int geschwindigkeitX;
-    int geschwindigkeitY;
+    double geschwindigkeitX;
+    double geschwindigkeitY;
+    double richtung;
     Spieler spieler;
     KollisionsChecker kollisionsChecker;
 
@@ -21,78 +22,124 @@ public class Ball extends Entitaet {
         this.spieler = spieler;
         this.size = size;
         this.kollisionsChecker = kollisionsChecker;
-        this.geschwindigkeit = 5;
 
         setDefaultValues();
     }
+
     @Override
     public void setDefaultValues() {
         x = 100;
         y = 150;
-        geschwindigkeitX = 5;
-        geschwindigkeitY = 8;
+        geschwindigkeitX = 0;
+        geschwindigkeitY = 0;
+        geschwindigkeit = 10;
+        richtung = 1;
     }
+
     @Override
     public void update() {
+
+        geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
+        geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
 
         x += geschwindigkeitX;
         y += geschwindigkeitY;
 
+        pruefeKollisionBallBildschirm();
 
-        if (x < gp.tileSize || x + size > gp.screenWidth - gp.tileSize) {
-            geschwindigkeitX *= -1;
-        }
-        if (y < 0) {
-            geschwindigkeitY *= -1;
-        }
+        pruefeKollisionBallSpieler();
 
-        if (kollisionsChecker.ballCollidesWithPlayer(this)) {
-            if (x + size <= spieler.getPositionX() + geschwindigkeitX * 2 || x >= spieler.getPositionX() + gp.tileSize * 2 + geschwindigkeitX * 2) {
-                geschwindigkeitY *= -1;
-                geschwindigkeitX *= -1;
+        pruefeKollisionBallSteine();
+    }
+
+    public void pruefeKollisionBallBildschirm(){
+        if (kollisionsChecker.trefferBildschirmLinksRechts(this)) {
+            richtung = Math.PI - richtung;
+            x = Math.max(gp.tileSize, Math.min(gp.screenWidth - gp.tileSize - size, x));
+        }
+        if (kollisionsChecker.trefferBildschirmOben(this)) {
+            richtung = -richtung;
+            y = 0;
+        }
+    }
+
+    public void pruefeKollisionBallSpieler() {
+        if (kollisionsChecker.ballKollidiertMitSpieler(this)) {
+
+            if (kollisionsChecker.trefferLinkeSeiteSpieler(this)) {
+                richtung -= Math.PI;
+                x = spieler.getPositionX() - size;
+            } else if (kollisionsChecker.trefferRechteSeiteSpieler(this)) {
+                richtung -= Math.PI;
+                x = spieler.getPositionX() + gp.tileSize * 2;
             } else {
-                geschwindigkeitY *= -1;
+                richtung = -richtung;
+
+                if (keyH.rightPressed) {
+                    richtung += 0.4;
+                }
+                if (keyH.leftPressed) {
+                    richtung -= 0.4;
+                }
+                if (Math.sin(richtung) > 0) {
+                    richtung = -Math.abs(richtung);
+                }
+
+                double minSin = 0.3;
+                if (Math.abs(Math.sin(richtung)) < minSin) {
+                    if (Math.cos(richtung) > 0) {
+                        richtung = -Math.asin(minSin);
+                    } else {
+                        richtung = Math.PI + Math.asin(minSin);
+                    }
+                }
             }
         }
-        int i = kollisionsChecker.ballCollidesWithStein(this);
-        if (i > -1) {
+    }
 
-            // bounce logic
-            if (kollisionsChecker.ballCollidesWithSteinFromSide(this, i)) {
-                geschwindigkeitX *= -1;
+    public void pruefeKollisionBallSteine() {
+        int steinIndex = kollisionsChecker.ballKollidiertMitStein(this);
+        if (steinIndex > -1) {
+            if (kollisionsChecker.ballKollidiertMitSteinVonSeite(this, steinIndex)) {
+                richtung = Math.PI - richtung;
             } else {
-                geschwindigkeitY *= -1;
+                richtung = -richtung;
             }
+            kollisionsChecker.entferneStein(steinIndex);
         }
     }
 
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.red);
-        g2.fillOval(x, y, 10 * 2, 10 * 2);
+        g2.fillOval((int) x, (int) y, size, size);
     }
 
     public int getPositionX() {
-        return x;
+        return (int) x;
     }
 
     public int getPositionY() {
-        return y;
+        return (int) y;
     }
 
-    public void  setPositionX(int x) {
+    public void setPositionX(int x) {
         this.x = x;
     }
+
     public void setPositionY(int y) {
         this.y = y;
     }
+
     public int getSize() {
         return size;
     }
-    public void setSize(int size) {
-        this.size = size;
-    }
-    public int getGeschwindigkeitX() {
+
+    public double getGeschwindigkeitX() {
         return geschwindigkeitX;
+    }
+
+    public double getGeschwindigkeit() {
+        return geschwindigkeit;
     }
 }

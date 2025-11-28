@@ -23,7 +23,15 @@ public class KollisionsChecker {
         this.steine = steine;
     }
 
-    public boolean ballCollidesWithPlayer(Ball ball) {
+    public boolean trefferBildschirmLinksRechts(Ball ball) {
+        return ball.getPositionX() < gp.tileSize || ball.getPositionX() + ball.getSize() > gp.screenWidth - gp.tileSize;
+    }
+
+    public boolean trefferBildschirmOben(Ball ball) {
+        return ball.getPositionY() < 0;
+    }
+
+    public boolean ballKollidiertMitSpieler(Ball ball) {
 
         Rectangle ballRect = new Rectangle(ball.getPositionX(), ball.getPositionY(), ball.getSize(), ball.getSize());
         Rectangle playerRect = new Rectangle(
@@ -36,7 +44,15 @@ public class KollisionsChecker {
         return ballRect.intersects(playerRect);
     }
 
-    public int ballCollidesWithStein(Ball ball) {
+    public boolean trefferLinkeSeiteSpieler(Ball ball) {
+        return ball.getPositionX() + ball.getSize() <= spieler.getPositionX() + ball.getGeschwindigkeit();
+    }
+
+    public boolean trefferRechteSeiteSpieler(Ball ball) {
+        return ball.getPositionX() >= spieler.getPositionX() + gp.tileSize * 2 - ball.getGeschwindigkeit();
+    }
+
+    public int ballKollidiertMitStein(Ball ball) {
         int i = 0;
         for (Stein stein : steine) {
             Rectangle steinRect = new Rectangle(stein.getPositionX(), stein.getPositionY(), gp.tileSize, gp.tileSize / 2);
@@ -54,17 +70,19 @@ public class KollisionsChecker {
         return -1;
     }
 
-    public boolean ballCollidesWithSteinFromSide(Ball ball, int removedSteinIndex) {
-        Stein stein = steine.get(removedSteinIndex);
+    public boolean ballKollidiertMitSteinVonSeite(Ball ball, int steinIndex) {
+        Stein stein = steine.get(steinIndex);
         if (ball.getPositionX() + ball.getSize() <= stein.getPositionX() + ball.getGeschwindigkeitX() && ball.getPositionX() > 10 ||
                 ball.getPositionX() >= stein.getPositionX() + gp.tileSize + ball.getGeschwindigkeitX()) {
-            steine.remove(removedSteinIndex);
-            gp.removeSteinFromImage(stein);
             return true;
         }
-        steine.remove(removedSteinIndex);
-        gp.removeSteinFromImage(stein);
         return false;
+    }
+
+    public void entferneStein(int steinIndex) {
+        Stein stein = steine.get(steinIndex);
+        steine.remove(steinIndex);
+        gp.removeSteinFromImage(stein);
     }
 
 }

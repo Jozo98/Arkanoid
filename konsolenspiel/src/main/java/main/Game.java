@@ -13,13 +13,14 @@ public class Game {
     private Ball ball;
     private ArrayList<Stein> steine;
     private KollisionsChecker kollisionsChecker;
+    private int size = 20;
 
     public Game(GamePanel gp, KeyHandler keyH) {
         spieler = new Spieler(gp, keyH);
         steine = new ArrayList<>();
         addSteine(gp);
         kollisionsChecker = new KollisionsChecker(gp, keyH, spieler, steine);
-        ball = new Ball(gp, keyH, spieler, 20, kollisionsChecker);
+        ball = new Ball(gp, keyH, spieler, size, kollisionsChecker);
     }
 
     public void update(GamePanel gp) {

@@ -5,9 +5,9 @@ import main.KeyHandler;
 
 import java.awt.*;
 
-public class Entitaet {
+abstract class Entitaet {
 
-    public int x, y;
+    public double x, y;
     public int geschwindigkeit;
     GamePanel gp;
     KeyHandler keyH;

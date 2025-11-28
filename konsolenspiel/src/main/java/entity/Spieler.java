@@ -17,13 +17,13 @@ public class Spieler extends Entitaet {
 
         setDefaultValues();
     }
-
+    @Override
     public void setDefaultValues() {
         x = startPosX;
         y = startPosY;
         geschwindigkeit = startGeschwindigkeit;
     }
-
+    @Override
     public void update() {
         if (keyH.leftPressed) {
             x -= geschwindigkeit;
@@ -31,14 +31,17 @@ public class Spieler extends Entitaet {
             x += geschwindigkeit;
         }
     }
-
+    @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.white);
-        g2.fillRect(x, y, gp.tileSize * 2, gp.tileSize / 2);
+        g2.fillRect((int) x, (int) y, gp.tileSize * 2, gp.tileSize / 2);
     }
 
-    public int getPositionX() {return x;}
+    public int getPositionX() {return (int) x;}
 
-    public int getPositionY() {return y;}
+    public int getPositionY() {return (int) y;}
 
+    public int getGeschwindigkeit() {
+        return startGeschwindigkeit;
+    }
 }
