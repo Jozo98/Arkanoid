@@ -52,7 +52,7 @@ public class Ball extends Entitaet {
         pruefeKollisionBallSteine();
     }
 
-    public void pruefeKollisionBallBildschirm(){
+    public void pruefeKollisionBallBildschirm() {
         if (kollisionsChecker.trefferBildschirmLinksRechts(this)) {
             richtung = Math.PI - richtung;
             x = Math.max(gp.tileSize, Math.min(gp.screenWidth - gp.tileSize - size, x));
@@ -64,48 +64,53 @@ public class Ball extends Entitaet {
     }
 
     public void pruefeKollisionBallSpieler() {
-        if (kollisionsChecker.ballKollidiertMitSpieler(this)) {
+        if (!(kollisionsChecker.ballKollidiertMitSpieler(this))) {
+            return;
+        }
+        if (kollisionsChecker.trefferLinkeSeiteSpieler(this)) {
+            richtung -= Math.PI;
+            x = spieler.getPositionX() - size;
+        } else if (kollisionsChecker.trefferRechteSeiteSpieler(this)) {
+            richtung -= Math.PI;
+            x = spieler.getPositionX() + gp.tileSize * 2;
+        } else {
+            richtung = -richtung;
 
-            if (kollisionsChecker.trefferLinkeSeiteSpieler(this)) {
-                richtung -= Math.PI;
-                x = spieler.getPositionX() - size;
-            } else if (kollisionsChecker.trefferRechteSeiteSpieler(this)) {
-                richtung -= Math.PI;
-                x = spieler.getPositionX() + gp.tileSize * 2;
-            } else {
-                richtung = -richtung;
-
-                if (keyH.rightPressed) {
-                    richtung += 0.4;
-                }
-                if (keyH.leftPressed) {
-                    richtung -= 0.4;
-                }
-                if (Math.sin(richtung) > 0) {
-                    richtung = -Math.abs(richtung);
-                }
-
-                double minSin = 0.3;
-                if (Math.abs(Math.sin(richtung)) < minSin) {
-                    if (Math.cos(richtung) > 0) {
-                        richtung = -Math.asin(minSin);
-                    } else {
-                        richtung = Math.PI + Math.asin(minSin);
-                    }
-                }
+            if (keyH.rightPressed) {
+                richtung += 0.4;
             }
+            if (keyH.leftPressed) {
+                richtung -= 0.4;
+            }
+            korrigiereBallrichtung();
         }
     }
 
     public void pruefeKollisionBallSteine() {
         int steinIndex = kollisionsChecker.ballKollidiertMitStein(this);
-        if (steinIndex > -1) {
-            if (kollisionsChecker.ballKollidiertMitSteinVonSeite(this, steinIndex)) {
-                richtung = Math.PI - richtung;
-            } else {
-                richtung = -richtung;
-            }
-            kollisionsChecker.entferneStein(steinIndex);
+        if (!(steinIndex > -1)) {
+            return;
+        }
+        if (kollisionsChecker.ballKollidiertMitSteinVonSeite(this, steinIndex)) {
+            richtung = Math.PI - richtung;
+        } else {
+            richtung = -richtung;
+        }
+        kollisionsChecker.entferneStein(steinIndex);
+    }
+
+    public void korrigiereBallrichtung() {
+        double minSin = 0.3;
+        if (Math.sin(richtung) > 0) {
+            richtung = -Math.abs(richtung);
+        }
+        if (!(Math.abs(Math.sin(richtung)) < minSin)) {
+            return;
+        }
+        if (Math.cos(richtung) > 0) {
+            richtung = -Math.asin(minSin);
+        } else {
+            richtung = Math.PI + Math.asin(minSin);
         }
     }
 
@@ -133,10 +138,6 @@ public class Ball extends Entitaet {
 
     public int getSize() {
         return size;
-    }
-
-    public double getGeschwindigkeitX() {
-        return geschwindigkeitX;
     }
 
     public double getGeschwindigkeit() {

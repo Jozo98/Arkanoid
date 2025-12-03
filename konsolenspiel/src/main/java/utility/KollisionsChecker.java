@@ -69,14 +69,33 @@ public class KollisionsChecker {
         }
         return -1;
     }
-
+    //Folgende Methoden wurde durch claude.ai erstellt:
     public boolean ballKollidiertMitSteinVonSeite(Ball ball, int steinIndex) {
         Stein stein = steine.get(steinIndex);
-        if (ball.getPositionX() + ball.getSize() <= stein.getPositionX() + ball.getGeschwindigkeitX() && ball.getPositionX() > 10 ||
-                ball.getPositionX() >= stein.getPositionX() + gp.tileSize + ball.getGeschwindigkeitX()) {
+
+        int overlapLeft = (ball.getPositionX() + ball.getSize()) - stein.getPositionX();
+        int overlapRight = (stein.getPositionX() + gp.tileSize) - ball.getPositionX();
+        int overlapTop = (ball.getPositionY() + ball.getSize()) - stein.getPositionY();
+        int overlapBottom = (stein.getPositionY() + gp.tileSize / 2) - ball.getPositionY();
+
+        // Find minimum overlap
+        int minOverlap = Math.min(Math.min(overlapLeft, overlapRight),
+                Math.min(overlapTop, overlapBottom));
+
+        // Push ball out and determine collision type
+        if (minOverlap == overlapLeft) {
+            ball.setPositionX(stein.getPositionX() - ball.getSize() - 1);
             return true;
+        } else if (minOverlap == overlapRight) {
+            ball.setPositionX(stein.getPositionX() + gp.tileSize + 1);
+            return true;
+        } else if (minOverlap == overlapTop) {
+            ball.setPositionY(stein.getPositionY() - ball.getSize() - 1);
+            return false;
+        } else { // bottom
+            ball.setPositionY(stein.getPositionY() + gp.tileSize / 2 + 1);
+            return false;
         }
-        return false;
     }
 
     public void entferneStein(int steinIndex) {

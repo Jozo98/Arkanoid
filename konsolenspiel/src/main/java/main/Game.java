@@ -6,6 +6,7 @@ import entity.Stein;
 import utility.KollisionsChecker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Game {
 
@@ -13,7 +14,20 @@ public class Game {
     private Ball ball;
     private ArrayList<Stein> steine;
     private KollisionsChecker kollisionsChecker;
-    private int size = 20;
+    private int size = 15;
+    boolean[] field = {
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true,
+            true, false, true, false, true, false, true, false, true, false, true
+    };
 
     public Game(GamePanel gp, KeyHandler keyH) {
         spieler = new Spieler(gp, keyH);
@@ -30,13 +44,16 @@ public class Game {
 
     private void addSteine(GamePanel gp) {
         int y = 10;
-        int abstand = 10;
-        for (int i = 0; i < 3; i++) {
-            int x = 58;
+        int abstand = 4;
+        for (int i = 0; i < 11; i++) {
+            int x = 48;
             y += 26;
             for (int j = 0; j < 11; j++) {
-                steine.add(new Stein(gp, x, y));
-                x += abstand + 40;
+                if(field[j + i*11]) {
+                    steine.add(new Stein(gp, x, y));
+
+                }
+                x += gp.tileSize + abstand;
             }
         }
     }
