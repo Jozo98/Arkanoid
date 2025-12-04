@@ -43,9 +43,32 @@ public class KollisionsChecker {
 
         return ballRect.intersects(playerRect);
     }
+    //claude.ai erstellt:
+    public boolean trefferSeiteSpieler(Ball ball) {
+        int overlapLeft = (ball.getPositionX() + ball.getSize() / 2)  - spieler.getPositionX();
+        int overlapRight = (spieler.getPositionX() + gp.tileSize * 2) - ball.getPositionX() - ball.getSize() / 2;
+        int overlapTop = (ball.getPositionY() + ball.getSize() / 2) - spieler.getPositionY();
+        int overlapBottom = (spieler.getPositionY() + gp.tileSize / 2) - ball.getPositionY() - ball.getSize() / 2;
 
-    public boolean trefferLinkeSeiteSpieler(Ball ball) {
-        return ball.getPositionX() + ball.getSize() <= spieler.getPositionX() + ball.getGeschwindigkeit();
+        // Find minimum overlap
+        int minOverlap = Math.min(Math.min(overlapLeft, overlapRight),
+                Math.min(overlapTop, overlapBottom));
+
+        // Push ball out and determine collision type
+        if (minOverlap == overlapLeft) {
+            ball.setPositionX(spieler.getPositionX() - ball.getSize() - 1);
+            if (keyH.leftPressed) {ball.setPositionX(ball.getPositionX() - 7);}
+            return true;
+        } else if (minOverlap == overlapRight) {
+            ball.setPositionX(spieler.getPositionX() + gp.tileSize * 2 + 1);
+            if (keyH.rightPressed) {ball.setPositionX(ball.getPositionX() + 7);}
+            return true;
+        } else if (minOverlap == overlapTop) {
+            ball.setPositionY(spieler.getPositionY() - ball.getSize() - 1);
+            return false;
+        } else {
+            return false;
+        }
     }
 
     public boolean trefferRechteSeiteSpieler(Ball ball) {
@@ -73,10 +96,10 @@ public class KollisionsChecker {
     public boolean ballKollidiertMitSteinVonSeite(Ball ball, int steinIndex) {
         Stein stein = steine.get(steinIndex);
 
-        int overlapLeft = (ball.getPositionX() + ball.getSize()) - stein.getPositionX();
-        int overlapRight = (stein.getPositionX() + gp.tileSize) - ball.getPositionX();
-        int overlapTop = (ball.getPositionY() + ball.getSize()) - stein.getPositionY();
-        int overlapBottom = (stein.getPositionY() + gp.tileSize / 2) - ball.getPositionY();
+        int overlapLeft = (ball.getPositionX() + ball.getSize() / 2)  - stein.getPositionX();
+        int overlapRight = (stein.getPositionX() + gp.tileSize) - ball.getPositionX() - ball.getSize() / 2;
+        int overlapTop = (ball.getPositionY() + ball.getSize() / 2) - stein.getPositionY();
+        int overlapBottom = (stein.getPositionY() + gp.tileSize / 2) - ball.getPositionY() - ball.getSize() / 2;
 
         // Find minimum overlap
         int minOverlap = Math.min(Math.min(overlapLeft, overlapRight),
@@ -84,16 +107,16 @@ public class KollisionsChecker {
 
         // Push ball out and determine collision type
         if (minOverlap == overlapLeft) {
-            ball.setPositionX(stein.getPositionX() - ball.getSize() - 1);
+
             return true;
         } else if (minOverlap == overlapRight) {
-            ball.setPositionX(stein.getPositionX() + gp.tileSize + 1);
+
             return true;
         } else if (minOverlap == overlapTop) {
-            ball.setPositionY(stein.getPositionY() - ball.getSize() - 1);
+
             return false;
         } else { // bottom
-            ball.setPositionY(stein.getPositionY() + gp.tileSize / 2 + 1);
+
             return false;
         }
     }

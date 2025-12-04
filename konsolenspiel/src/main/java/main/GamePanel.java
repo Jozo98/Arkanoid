@@ -15,7 +15,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
     private VolatileImage steineImage;
-
+    private int gamestate = 1;
+    private final int titleState = 0;
+    private final int playState = 1;
 
     final double FPS = 60;
 
@@ -50,7 +52,9 @@ public class GamePanel extends JPanel implements Runnable {
             game.update(this);
 
             repaint();
-
+            if(keyH.rightPressed) {
+                gamestate = 1;
+            }
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime = remainingTime / 1000000;
@@ -71,9 +75,26 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(steineImage, 0, 0, null);
-        game.getSpieler().draw(g2);
-        game.getBall().draw(g2);
+        if (gamestate == playState) {
+            g2.drawImage(steineImage, 0, 0, null);
+            game.getSpieler().draw(g2);
+            game.getBall().draw(g2);
+        }
+        else {
+            g2.setColor(Color.blue);
+            g2.fillRect(0, 0, screenWidth, screenHeight);
+
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
+            String text = "Arkanoid";
+            int x = tileSize * 2 + tileSize / 2;
+            int y = tileSize * 3;
+
+            g2.setColor(Color.black);
+            g2.drawString(text, x, y);
+
+            g2.setColor(Color.white);
+            g2.drawString(text, x+5, y+5);
+        }
     }
 
     private void buildSteineImage() {

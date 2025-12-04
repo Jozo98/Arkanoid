@@ -67,12 +67,8 @@ public class Ball extends Entitaet {
         if (!(kollisionsChecker.ballKollidiertMitSpieler(this))) {
             return;
         }
-        if (kollisionsChecker.trefferLinkeSeiteSpieler(this)) {
+        if (kollisionsChecker.trefferSeiteSpieler(this)) {
             richtung -= Math.PI;
-            x = spieler.getPositionX() - size;
-        } else if (kollisionsChecker.trefferRechteSeiteSpieler(this)) {
-            richtung -= Math.PI;
-            x = spieler.getPositionX() + gp.tileSize * 2;
         } else {
             richtung = -richtung;
 
