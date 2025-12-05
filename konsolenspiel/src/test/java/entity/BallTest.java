@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BallTest {
     GamePanel gamePanel = new GamePanel();
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(gamePanel);
     Game game = new Game(gamePanel, keyH);
     Thread gameThread;
     Spieler spieler = new Spieler(gamePanel, keyH);

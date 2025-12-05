@@ -6,7 +6,6 @@ import entity.Stein;
 import utility.KollisionsChecker;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Game {
 
@@ -43,8 +42,8 @@ public class Game {
     }
 
     public void update(GamePanel gp) {
-        spieler.update();
-        ball.update();
+            spieler.update();
+            ball.update();
     }
 
     private void addSteine(GamePanel gp) {
