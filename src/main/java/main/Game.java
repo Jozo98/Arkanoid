@@ -42,8 +42,8 @@ public class Game {
     }
 
     public void update(GamePanel gp) {
-        spieler.update();
-        ball.update();
+            spieler.update();
+            ball.update();
     }
 
     private void addSteine(GamePanel gp) {

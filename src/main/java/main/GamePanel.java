@@ -1,30 +1,30 @@
 package main;
-
 import entity.Stein;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
 
     final int originalTitleSize = 16;
     final int scale = 3;
-
     public final int tileSize = originalTitleSize * scale;
     final int maxScreenCol = 14;
     final int maxScreenRow = 16;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
     private VolatileImage steineImage;
-    private int gamestate = 0;
-    private final int titleState = 0;
-    private final int playState = 1;
 
     final double FPS = 60;
 
     Game game;
-    KeyHandler keyH = new KeyHandler();
+    UI ui;
+    KeyHandler keyH = new KeyHandler(this);
+    GameStateManager gsm;
     Thread gameThread;
 
     public GamePanel() {
@@ -34,6 +34,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
         game = new Game(this, keyH);
+        ui = new UI(this);
+        gsm = new GameStateManager(this, keyH);
         buildSteineImage();
     }
 
@@ -51,12 +53,17 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
 
-            game.update(this);
+            gsm.updateGameState();
+
+            if(gsm.getGameState() == 2){
+                System.exit(0);
+            }
+            if(gsm.getGameState() == 1){
+                game.update(this);
+            }
 
             repaint();
-            if(keyH.rightPressed) {
-                gamestate = 1;
-            }
+
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime = remainingTime / 1000000;
@@ -77,26 +84,12 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (gamestate == playState) {
+        if (gsm.getGameState() == 1) {
             g2.drawImage(steineImage, 0, 0, null);
             game.getSpieler().draw(g2);
             game.getBall().draw(g2);
         }
-        else {
-            g2.setColor(Color.blue);
-            g2.fillRect(0, 0, screenWidth, screenHeight);
-
-            g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
-            String text = "Arkanoid";
-            int x = tileSize * 2 + tileSize / 2;
-            int y = tileSize * 3;
-
-            g2.setColor(Color.black);
-            g2.drawString(text, x, y);
-
-            g2.setColor(Color.white);
-            g2.drawString(text, x+5, y+5);
-        }
+        ui.draw(g2);
     }
 
     private void buildSteineImage() {

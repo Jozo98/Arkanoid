@@ -16,7 +16,7 @@ public class KollisionsChecker {
     Spieler spieler;
     ArrayList<Stein> steine;
 
-    public KollisionsChecker(GamePanel gp, KeyHandler keyH, Spieler spieler, ArrayList<Stein> steine) {
+    public KollisionsChecker(GamePanel gp, KeyHandler keyH,  Spieler spieler, ArrayList<Stein> steine) {
         this.gp = gp;
         this.keyH = keyH;
         this.spieler = spieler;
@@ -45,10 +45,10 @@ public class KollisionsChecker {
     }
     //claude.ai erstellt:
     public boolean trefferSeiteSpieler(Ball ball) {
-        int overlapLeft = (ball.getPositionX() + ball.getSize() / 2)  - spieler.getPositionX();
-        int overlapRight = (spieler.getPositionX() + gp.tileSize * 2) - ball.getPositionX() - ball.getSize() / 2;
-        int overlapTop = (ball.getPositionY() + ball.getSize() / 2) - spieler.getPositionY();
-        int overlapBottom = (spieler.getPositionY() + gp.tileSize / 2) - ball.getPositionY() - ball.getSize() / 2;
+        int overlapLeft = (ball.getPositionX() + ball.getSize() / 2)  - spieler.getPositionX() + ball.getSize();
+        int overlapRight = (spieler.getPositionX() + gp.tileSize * 2) - ball.getPositionX();
+        int overlapTop = (ball.getPositionY() + ball.getSize() / 2) - spieler.getPositionY() + ball.getSize();
+        int overlapBottom = (spieler.getPositionY() + gp.tileSize / 2) - ball.getPositionY();
 
         // Find minimum overlap
         int minOverlap = Math.min(Math.min(overlapLeft, overlapRight),
