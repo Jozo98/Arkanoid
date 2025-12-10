@@ -8,7 +8,7 @@ import java.awt.*;
 public class Spieler extends Entitaet {
 
     int startPosX = 288;
-    int startPosY = 736;
+    int startPosY = 720;
     int startGeschwindigkeit = 8;
 
     public Spieler(GamePanel gp, KeyHandler keyH) {

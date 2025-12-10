@@ -1,8 +1,12 @@
 package main;
 import entity.Stein;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -85,9 +89,7 @@ public class GamePanel extends JPanel implements Runnable {
             game.getSpieler().draw(g2);
             game.getBall().draw(g2);
         }
-        else {
-            ui.draw(g2);
-        }
+        ui.draw(g2);
     }
 
     private void buildSteineImage() {

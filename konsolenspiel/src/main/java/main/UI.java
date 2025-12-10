@@ -1,12 +1,19 @@
 package main;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class UI {
 
     GamePanel gp;
     Graphics2D g2;
     public int menuNum = 0;
+    BufferedImage ball1;
+    BufferedImage ball2;
+    BufferedImage ball3;
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -28,6 +35,12 @@ public class UI {
             if (menuNum == 2 && gp.keyH.enterPressed) {
                 menuNum = 0;
             }
+            if (gp.keyH.downPressed || gp.keyH.upPressed) {
+                gp.keyH.downPressed = false;
+                gp.keyH.upPressed = false;
+            }
+        }else if (gp.gsm.getGameState() == 1) {
+            drawHUD();
         } else if (gp.gsm.getGameState() == 3) {
             drawLoadGame();
             if (gp.keyH.upPressed) {
@@ -42,6 +55,10 @@ public class UI {
             }
             if (gp.keyH.escapePressed) {
                 menuNum = 0;
+            }
+            if(gp.keyH.downPressed || gp.keyH.upPressed) {
+                gp.keyH.downPressed = false;
+                gp.keyH.upPressed = false;
             }
         }
     }
@@ -141,6 +158,19 @@ public class UI {
         FontMetrics fm = g2.getFontMetrics();
         int length = fm.stringWidth(text);
         return (gp.screenWidth - length) / 2;
+    }
+
+    public void drawHUD() {
+        try {
+            ball1 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
+            ball2 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
+            ball3 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        g2.drawImage(ball1, 0, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
+        g2.drawImage(ball2, gp.tileSize/2, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
+        g2.drawImage(ball3, gp.tileSize, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
     }
 
 }
