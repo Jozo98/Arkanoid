@@ -31,13 +31,13 @@ public class GameStateManager {
             }
         }
 
-        if (gameState == loadState && keyH.escapePressed) {
-
-            gameState = titleState;
+        if (gameState == playState) {
+            if (keyH.enterPressed && gp.ui.menuNum == 1) {
+                gameState = titleState;
+            }
         }
 
-        if (gameState == playState && keyH.escapePressed) {
-
+        if (gameState == loadState && keyH.escapePressed) {
             gameState = titleState;
         }
     }

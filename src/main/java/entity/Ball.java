@@ -14,6 +14,8 @@ public class Ball extends Entitaet {
     double richtung;
     Spieler spieler;
     KollisionsChecker kollisionsChecker;
+    int startBall = 0;
+    int leben = 3;
 
     public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, int size, KollisionsChecker kollisionsChecker) {
 
@@ -28,8 +30,8 @@ public class Ball extends Entitaet {
 
     @Override
     public void setDefaultValues() {
-        x = 100;
-        y = 150;
+        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
+        y = spieler.getPositionY() - size - 1;
         geschwindigkeitX = 0;
         geschwindigkeitY = 0;
         geschwindigkeit = 10;
@@ -38,12 +40,29 @@ public class Ball extends Entitaet {
 
     @Override
     public void update() {
+        if (keyH.spacePressed) {
+            startBall++;
+            keyH.spacePressed = false;
+        }
 
-        geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
-        geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
+        if (startBall > 0 && leben > 0) {
+            geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
+            geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
 
-        x += geschwindigkeitX;
-        y += geschwindigkeitY;
+            x += geschwindigkeitX;
+            y += geschwindigkeitY;
+        } else {
+            x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
+        }
+        if (y > gp.screenHeight) {
+            leben--;
+            startBall = 0;
+
+            if (leben > 0) {
+                x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
+                y = spieler.getPositionY() - size - 1;
+            }
+        }
 
         pruefeKollisionBallBildschirm();
 
@@ -138,5 +157,9 @@ public class Ball extends Entitaet {
 
     public double getGeschwindigkeit() {
         return geschwindigkeit;
+    }
+
+    public int getLeben() {
+        return leben;
     }
 }

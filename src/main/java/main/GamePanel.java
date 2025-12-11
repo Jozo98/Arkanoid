@@ -55,10 +55,10 @@ public class GamePanel extends JPanel implements Runnable {
 
             gsm.updateGameState();
 
-            if(gsm.getGameState() == 2){
+            if(gsm.getGameState() == gsm.exitState){
                 System.exit(0);
             }
-            if(gsm.getGameState() == 1){
+            if(gsm.getGameState() == gsm.playState){
                 game.update(this);
             }
 

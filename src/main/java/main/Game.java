@@ -14,24 +14,6 @@ public class Game {
     private ArrayList<Stein> steine;
     private KollisionsChecker kollisionsChecker;
     private int size = 15;
-    boolean[] field = {
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true
-    };
 
     public Game(GamePanel gp, KeyHandler keyH) {
         spieler = new Spieler(gp, keyH);
@@ -53,7 +35,7 @@ public class Game {
             int x = 48;
             y += 26;
             for (int j = 0; j < 11; j++) {
-                if(field[j + i*11]) {
+                if(Levels.level1[j + i*11]) {
                     steine.add(new Stein(gp, x, y));
 
                 }
