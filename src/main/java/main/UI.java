@@ -33,28 +33,16 @@ public class UI {
                     menuNum++;
             }
             if (gp.keyH.escapePressed || gp.keyH.enterPressed) {
-               menuNum = 0;
-               gp.keyH.escapePressed = false;
-               gp.keyH.enterPressed = false;
+                menuNum = 0;
+                gp.keyH.escapePressed = false;
+                gp.keyH.enterPressed = false;
             }
             if (gp.keyH.downPressed || gp.keyH.upPressed) {
                 gp.keyH.downPressed = false;
                 gp.keyH.upPressed = false;
             }
-        }else if (gp.gsm.getGameState() == gp.gsm.playState) {
+        } else if (gp.gsm.getGameState() == gp.gsm.playState) {
             drawHUD();
-            drawGameOver();
-            if (gp.keyH.upPressed) {
-                if (menuNum > 0)
-                    menuNum--;
-            }
-            if (gp.keyH.downPressed) {
-                if (menuNum < 1)
-                    menuNum++;
-            }
-            if (gp.keyH.escapePressed) {
-                menuNum = 0;
-            }
         } else if (gp.gsm.getGameState() == gp.gsm.loadState) {
             drawLoadGame();
             if (gp.keyH.enterPressed) {
@@ -70,9 +58,23 @@ public class UI {
                     menuNum++;
                 }
             }
-            if(gp.keyH.downPressed || gp.keyH.upPressed) {
+            if (gp.keyH.downPressed || gp.keyH.upPressed) {
                 gp.keyH.downPressed = false;
                 gp.keyH.upPressed = false;
+            }
+        }
+        else {
+         drawGameOver();
+            if (gp.keyH.upPressed) {
+                if (menuNum > 0)
+                    menuNum--;
+            }
+            if (gp.keyH.downPressed) {
+                if (menuNum < 1)
+                    menuNum++;
+            }
+            if (gp.keyH.escapePressed) {
+                menuNum = 0;
             }
         }
     }
@@ -179,46 +181,45 @@ public class UI {
             ball1 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
             ball2 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
             ball3 = ImageIO.read(getClass().getResourceAsStream("/Ball.png"));
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         if (gp.game.getBall().getLeben() > 0)
-        g2.drawImage(ball1, 0, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
+            g2.drawImage(ball1, 0, gp.tileSize * 15 + gp.tileSize / 2, gp.tileSize / 2, gp.tileSize / 2, null);
         if (gp.game.getBall().getLeben() > 1)
-        g2.drawImage(ball2, gp.tileSize/2, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
+            g2.drawImage(ball2, gp.tileSize / 2, gp.tileSize * 15 + gp.tileSize / 2, gp.tileSize / 2, gp.tileSize / 2, null);
         if (gp.game.getBall().getLeben() > 2)
-        g2.drawImage(ball3, gp.tileSize, gp.tileSize * 15 + gp.tileSize/2, gp.tileSize/2, gp.tileSize/2, null);
+            g2.drawImage(ball3, gp.tileSize, gp.tileSize * 15 + gp.tileSize / 2, gp.tileSize / 2, gp.tileSize / 2, null);
     }
 
     public void drawGameOver() {
-        if (gp.game.getBall().getLeben() < 0) {
-            g2.setColor(Color.red);
-            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-            g2.setColor(Color.black);
-            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));
-            String text = "Game Over";
-            int x = getCenterX(text);
-            int y = gp.tileSize * 5;
-            g2.drawString(text, x, y);
-            g2.setColor(Color.white);
-            g2.drawString(text, x + 5, y + 5);
+        g2.setColor(Color.red);
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        g2.setColor(Color.black);
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));
+        String text = "Game Over";
+        int x = getCenterX(text);
+        int y = gp.tileSize * 5;
+        g2.drawString(text, x, y);
+        g2.setColor(Color.white);
+        g2.drawString(text, x + 5, y + 5);
 
-            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
-            text = "TRY AGAIN";
-            x = getCenterX(text);
-            y += gp.tileSize * 2;
-            g2.drawString(text, x, y);
-            if (menuNum == 0) {
-                g2.drawString(">", x - gp.tileSize, y);
-            }
-            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
-            text = "BACK TO MENU";
-            x = getCenterX(text);
-            y += gp.tileSize * 2;
-            g2.drawString(text, x, y);
-            if (menuNum == 1) {
-                g2.drawString(">", x - gp.tileSize, y);
-            }
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+        text = "TRY AGAIN";
+        x = getCenterX(text);
+        y += gp.tileSize * 2;
+        g2.drawString(text, x, y);
+        if (menuNum == 0) {
+            g2.drawString(">", x - gp.tileSize, y);
+        }
+
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+        text = "BACK TO MENU";
+        x = getCenterX(text);
+        y += gp.tileSize * 2;
+        g2.drawString(text, x, y);
+        if (menuNum == 1) {
+            g2.drawString(">", x - gp.tileSize, y);
         }
     }
 

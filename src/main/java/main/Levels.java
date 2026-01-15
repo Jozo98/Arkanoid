@@ -1,23 +1,118 @@
 package main;
 
+
 public class Levels {
 
-    public static boolean[] level1 = {
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true,
-            true, false, true, false, true, false, true, false, true, false, true
-    };
+    public static boolean[][] levels =
+            {
+                    {
+                            false, false, false, false, false, true, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false
+                    },
+
+                    {
+                            false, true, true, false, false, true, false, false, true, true, false,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            true, false, true, true, true, true, true, true, true, false, true,
+                            true, false, true, false, true, true, true, false, true, false, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, false, true, false, false, false, false, true, false, false,
+                            true, true, true, false, false, true, false, false, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            true, false, true, false, true, true, true, false, true, false, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, false, true, false, false, false, false, true, false, false
+                    },
+                    {
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            false, true, false, true, false, true, false, true, false, true, false
+                    },
+                    {
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true,
+                            true, false, true, false, true, false, true, false, true, false, true
+                    },
+                    {
+                            false, false, false, false, true, true, true, false, false, false, false,
+                            false, false, false, true, true, true, true, true, false, false, false,
+                            false, false, true, true, true, true, true, true, true, false, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, true, true, true, true, true, true, true, true, true, false,
+                            false, false, true, true, true, true, true, true, true, false, false,
+                            false, false, false, true, true, true, true, true, false, false, false,
+                            false, false, false, false, true, true, true, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false
+                    },
+                    {
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            true, true, true, true, true, true, true, true, true, true, true,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false, false
+                    }
+            };
 }

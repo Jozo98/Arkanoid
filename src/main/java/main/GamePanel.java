@@ -119,4 +119,16 @@ public class GamePanel extends JPanel implements Runnable {
                 tileSize, tileSize / 2);
         g2.dispose();
     }
+
+    public void resetSteineImage() {
+        if (steineImage != null) {
+            steineImage.flush(); // release resources
+        }
+        buildSteineImage();
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
 }

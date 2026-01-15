@@ -162,4 +162,14 @@ public class Ball extends Entitaet {
     public int getLeben() {
         return leben;
     }
+
+    public void resetLeben() {leben = 3; }
+
+    public void resetPosition() {
+        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
+        y = spieler.getPositionY() - size - 1;
+        startBall = 0;
+    }
+
+    public void setStartBall(int x) {startBall = x;}
 }

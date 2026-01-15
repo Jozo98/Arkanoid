@@ -44,4 +44,9 @@ public class Spieler extends Entitaet {
     public int getGeschwindigkeit() {
         return startGeschwindigkeit;
     }
+
+    public void resetPosition() {
+        x = 288;
+        y = 720;
+    }
 }
