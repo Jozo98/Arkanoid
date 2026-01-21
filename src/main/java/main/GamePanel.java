@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     GameStateManager gsm;
     Thread gameThread;
 
-    public GamePanel() {
+    public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -53,13 +53,21 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
 
-            gsm.updateGameState();
+            try {
+                gsm.updateGameState();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             if(gsm.getGameState() == gsm.exitState){
                 System.exit(0);
             }
             if(gsm.getGameState() == gsm.playState){
-                game.update(this);
+                try {
+                    game.update(this);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             repaint();

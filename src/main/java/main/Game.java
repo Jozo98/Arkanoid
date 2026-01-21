@@ -1,10 +1,14 @@
 package main;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.Ball;
 import entity.Spieler;
 import entity.Stein;
 import utility.KollisionsChecker;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game {
@@ -16,26 +20,30 @@ public class Game {
     private GamePanel gp;
     private int size = 15;
     private int aktuellesLevel = 0;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    public Game(GamePanel gp, KeyHandler keyH) {
+    public Game(GamePanel gp, KeyHandler keyH) throws IOException {
         spieler = new Spieler(gp, keyH);
         steine = new ArrayList<>();
+        aktuellesLevel = objectMapper.readValue(new File("src/main/resources/aktuellesLevel.json"),
+                Integer.class);
         addSteine(gp);
         kollisionsChecker = new KollisionsChecker(gp, keyH, spieler, steine);
         ball = new Ball(gp, keyH, spieler, size, kollisionsChecker);
         this.gp = gp;
     }
 
-    public void update(GamePanel gp) {
+    public void update(GamePanel gp) throws IOException {
             spieler.update();
             updateLevels();
             ball.update();
     }
 
 
-    public void updateLevels() {
+    public void updateLevels() throws IOException {
         if (steine.isEmpty()) {
             aktuellesLevel++;
+            objectMapper.writeValue(new File("src/main/resources/aktuellesLevel.json"), aktuellesLevel);
             reset();
         }
     }
