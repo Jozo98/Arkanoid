@@ -8,19 +8,20 @@ import java.awt.*;
 
 public class Ball extends Entitaet {
 
-    int size;
-    double geschwindigkeitX;
-    double geschwindigkeitY;
-    double richtung;
-    Spieler spieler;
-    KollisionsChecker kollisionsChecker;
+    private int size;
+    private double geschwindigkeitX;
+    private double geschwindigkeitY;
+    private double richtung;
+    private Spieler spieler;
+    private KollisionsChecker kollisionsChecker;
+    private boolean startBall;
+    private int leben;
 
-    public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, int size, KollisionsChecker kollisionsChecker) {
+    public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, KollisionsChecker kollisionsChecker) {
 
         this.gp = gp;
         this.keyH = keyH;
         this.spieler = spieler;
-        this.size = size;
         this.kollisionsChecker = kollisionsChecker;
 
         setDefaultValues();
@@ -28,22 +29,42 @@ public class Ball extends Entitaet {
 
     @Override
     public void setDefaultValues() {
-        x = 100;
-        y = 150;
+        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
+        y = spieler.getPositionY() - size - 1;
         geschwindigkeitX = 0;
         geschwindigkeitY = 0;
         geschwindigkeit = 10;
         richtung = 1;
+        leben = 3;
+        size = 15;
+        startBall = false;
     }
 
     @Override
     public void update() {
+        if (keyH.spacePressed) {
+            startBall = true;
+            keyH.spacePressed = false;
+        }
 
-        geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
-        geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
+        if (startBall && leben > 0) {
+            geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
+            geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
+            x += geschwindigkeitX;
+            y += geschwindigkeitY;
+        } else {
+            x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
+        }
+        if (y > gp.screenHeight) {
+            leben--;
+            startBall = false;
+            resetRichtung();
 
-        x += geschwindigkeitX;
-        y += geschwindigkeitY;
+            if (leben > 0) {
+                x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
+                y = spieler.getPositionY() - size - 1;
+            }
+        }
 
         pruefeKollisionBallBildschirm();
 
@@ -136,7 +157,23 @@ public class Ball extends Entitaet {
         return size;
     }
 
-    public double getGeschwindigkeit() {
-        return geschwindigkeit;
+    public int getLeben() {
+        return leben;
+    }
+
+    public void resetLeben() {leben = 3; }
+
+    public void resetRichtung() {richtung = 1;}
+
+    public void resetPosition() {
+        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
+        y = spieler.getPositionY() - size - 1;
+        startBall = false;
+    }
+
+    public void reset() {
+        resetLeben();
+        resetRichtung();
+        resetPosition();
     }
 }

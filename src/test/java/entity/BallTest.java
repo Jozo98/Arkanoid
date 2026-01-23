@@ -5,6 +5,8 @@ import main.GamePanel;
 import main.KeyHandler;
 import utility.KollisionsChecker;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BallTest {
@@ -14,6 +16,9 @@ class BallTest {
     Thread gameThread;
     Spieler spieler = new Spieler(gamePanel, keyH);
     KollisionsChecker kollisionsChecker = new KollisionsChecker(gamePanel, keyH, spieler, game.getSteine());
+
+    BallTest() throws IOException {
+    }
 
 
     @org.junit.jupiter.api.Test

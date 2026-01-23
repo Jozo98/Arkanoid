@@ -1,48 +1,66 @@
 package main;
 
-import java.awt.event.KeyEvent;
+
+import java.io.IOException;
 
 public class GameStateManager {
 
-    GamePanel gp;
-    KeyHandler keyH;
-    private int gameState = 0;
-    public final int titleState = 0;
-    public final int playState = 1;
-    public final int exitState = 2;
-    public final int loadState = 3;
+    private GamePanel gp;
+    private KeyHandler keyH;
+    private GameState gameState;
 
     public GameStateManager(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+        this.gameState = GameState.TITLE;
     }
 
-    public void updateGameState() {
-        if (gameState == titleState && keyH.enterPressed) {
+    public void updateGameState() throws IOException {
 
-            if (gp.ui.menuNum == 0) {
-                gameState = playState;
-            }
-            if (gp.ui.menuNum == 1) {
-                gameState = loadState;
-            }
-            if (gp.ui.menuNum == 2) {
-                gameState = exitState;
-            }
-        }
+        int menuNum = gp.ui.getMenuNum();
 
-        if (gameState == loadState && keyH.escapePressed) {
-
-            gameState = titleState;
-        }
-
-        if (gameState == playState && keyH.escapePressed) {
-
-            gameState = titleState;
+        switch (gameState) {
+            case TITLE:
+                if (!keyH.enterPressed) {
+                    return;
+                }
+                if (menuNum == 0) {
+                    gp.game.startNewGame();
+                    gameState = GameState.PLAY;
+                } else if (menuNum == 1) {
+                    gameState = GameState.PLAY;
+                    gp.game.reset();
+                } else if (menuNum == 2) {
+                    gameState = GameState.EXIT;
+                }
+                break;
+            case PLAY:
+                if (gp.game.isGameOver()) {
+                    gameState = GameState.GAME_OVER;
+                } else if (keyH.escapePressed) {
+                    gameState = GameState.TITLE;
+                }
+                break;
+            case GAME_OVER:
+                if (!keyH.enterPressed) {
+                    return;
+                }
+                if (menuNum == 0) {
+                    gp.game.reset();
+                    gameState = GameState.PLAY;
+                } else if (menuNum == 1) {
+                    gameState = GameState.TITLE;
+                }
+                break;
+//            case LOAD:
+//                if (keyH.escapePressed) {
+//                    gameState = GameState.TITLE;
+//                }
+//                break;
         }
     }
 
-    public int getGameState() {
+    public GameState getGameState() {
         return gameState;
     }
 }

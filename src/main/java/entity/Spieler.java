@@ -41,7 +41,8 @@ public class Spieler extends Entitaet {
 
     public int getPositionY() {return (int) y;}
 
-    public int getGeschwindigkeit() {
-        return startGeschwindigkeit;
+    public void resetPosition() {
+        x = startPosX;
+        y = startPosY;
     }
 }
