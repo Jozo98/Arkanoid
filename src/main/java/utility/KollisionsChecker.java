@@ -71,19 +71,11 @@ public class KollisionsChecker {
         }
     }
 
-    public boolean trefferRechteSeiteSpieler(Ball ball) {
-        return ball.getPositionX() >= spieler.getPositionX() + gp.tileSize * 2 - ball.getGeschwindigkeit();
-    }
-
     public int ballKollidiertMitStein(Ball ball) {
         int i = 0;
         for (Stein stein : steine) {
             Rectangle steinRect = new Rectangle(stein.getPositionX(), stein.getPositionY(), gp.tileSize, gp.tileSize / 2);
-            Rectangle ballRect = new Rectangle(
-                    ball.getPositionX(),
-                    ball.getPositionY(),
-                    ball.getSize(),
-                    ball.getSize()
+            Rectangle ballRect = new Rectangle(ball.getPositionX(), ball.getPositionY(), ball.getSize(), ball.getSize()
             );
             if (ballRect.intersects(steinRect)) {
                 return i;
@@ -120,7 +112,8 @@ public class KollisionsChecker {
             return false;
         }
     }
-
+    //Diese Methode hat hier eigentlich nichts verloren. Habe es hier drin gelassen,
+    //da ich sonst zu viel Code umschreiben müsste.
     public void entferneStein(int steinIndex) {
         Stein stein = steine.get(steinIndex);
         steine.remove(steinIndex);

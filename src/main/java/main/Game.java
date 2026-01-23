@@ -1,13 +1,12 @@
 package main;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import entity.Ball;
 import entity.Spieler;
 import entity.Stein;
 import utility.KollisionsChecker;
+import utility.SaveManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -15,25 +14,23 @@ public class Game {
 
     private Spieler spieler;
     private Ball ball;
-    private ArrayList<Stein> steine;
     private KollisionsChecker kollisionsChecker;
     private GamePanel gp;
-    private int size = 15;
-    private int aktuellesLevel = 0;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ArrayList<Stein> steine;
+    private int size;
+    private int aktuellesLevel;
 
     public Game(GamePanel gp, KeyHandler keyH) throws IOException {
         spieler = new Spieler(gp, keyH);
         steine = new ArrayList<>();
-        aktuellesLevel = objectMapper.readValue(new File("src/main/resources/aktuellesLevel.json"),
-                Integer.class);
+        aktuellesLevel = SaveManager.loadGame();
         addSteine(gp);
         kollisionsChecker = new KollisionsChecker(gp, keyH, spieler, steine);
-        ball = new Ball(gp, keyH, spieler, size, kollisionsChecker);
+        ball = new Ball(gp, keyH, spieler, kollisionsChecker);
         this.gp = gp;
     }
 
-    public void update(GamePanel gp) throws IOException {
+    public void update() throws IOException {
             spieler.update();
             updateLevels();
             ball.update();
@@ -43,7 +40,7 @@ public class Game {
     public void updateLevels() throws IOException {
         if (steine.isEmpty()) {
             aktuellesLevel++;
-            objectMapper.writeValue(new File("src/main/resources/aktuellesLevel.json"), aktuellesLevel);
+            SaveManager.saveGame(aktuellesLevel);
             reset();
         }
     }
@@ -53,8 +50,7 @@ public class Game {
         steine.clear();
         addSteine(gp);
         gp.resetSteineImage();
-        ball.resetLeben();
-        ball.resetPosition();
+        ball.reset();
     }
 
     public void addSteine(GamePanel gp) {
@@ -66,11 +62,16 @@ public class Game {
             for (int j = 0; j < 11; j++) {
                 if(Levels.levels[aktuellesLevel][j + i*11]) {
                     steine.add(new Stein(gp, x, y));
-
                 }
                 x += gp.tileSize + abstand;
             }
         }
+    }
+
+    public void startNewGame() throws IOException {
+        SaveManager.resetGame();
+        aktuellesLevel = SaveManager.loadGame();
+        reset();
     }
 
     public Spieler getSpieler() {
@@ -85,8 +86,12 @@ public class Game {
         return steine;
     }
 
-    public void setAktuellesLevel(int x) {
-        aktuellesLevel = x;
+    public boolean isGameOver() {
+        return ball.getLeben() == 0;
+    }
+
+    public int getLeben() {
+        return ball.getLeben();
     }
 }
 

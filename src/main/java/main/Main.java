@@ -1,9 +1,7 @@
 package main;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 
 public class Main {

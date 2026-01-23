@@ -1,25 +1,24 @@
 package main;
 import entity.Stein;
 
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    final int originalTitleSize = 16;
-    final int scale = 3;
-    public final int tileSize = originalTitleSize * scale;
-    final int maxScreenCol = 14;
-    final int maxScreenRow = 16;
-    public final int screenWidth = tileSize * maxScreenCol;
-    public final int screenHeight = tileSize * maxScreenRow;
+    private final int originalTitleSize = 16;
+    private final int scale = 3;
+    private final int maxScreenCol = 14;
+    private final int maxScreenRow = 16;
     private VolatileImage steineImage;
 
-    final double FPS = 60;
+    //Ist hier public, da es im Tutorial auch auf public gestellt wurde. Nicht OOP.
+    public final int tileSize = originalTitleSize * scale;
+    public final int screenWidth = tileSize * maxScreenCol;
+    public final int screenHeight = tileSize * maxScreenRow;
 
     Game game;
     UI ui;
@@ -47,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
+        double FPS = 60;
         double drawInterval = 1000000000 / FPS;
         double nextDrawTime = System.nanoTime() + drawInterval;
 
@@ -59,12 +59,12 @@ public class GamePanel extends JPanel implements Runnable {
                 throw new RuntimeException(e);
             }
 
-            if(gsm.getGameState() == gsm.exitState){
+            if(gsm.getGameState() == GameState.EXIT){
                 System.exit(0);
             }
-            if(gsm.getGameState() == gsm.playState){
+            if(gsm.getGameState() == GameState.PLAY){
                 try {
-                    game.update(this);
+                    game.update();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -92,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (gsm.getGameState() == 1) {
+        if (gsm.getGameState() == GameState.PLAY) {
             g2.drawImage(steineImage, 0, 0, null);
             game.getSpieler().draw(g2);
             game.getBall().draw(g2);
@@ -100,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
         ui.draw(g2);
     }
 
+    //ChatGPT
     private void buildSteineImage() {
         // Use opaque image for speed
         steineImage = GraphicsEnvironment.getLocalGraphicsEnvironment()
@@ -118,7 +119,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         g2.dispose();
     }
-
+    //ChatGPT
     public void removeSteinFromImage(Stein removed) {
         if (removed == null) return;
         Graphics2D g2 = steineImage.createGraphics();
@@ -128,15 +129,11 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
+    //ChatGPT
     public void resetSteineImage() {
         if (steineImage != null) {
             steineImage.flush(); // release resources
         }
         buildSteineImage();
     }
-
-    public Game getGame() {
-        return game;
-    }
-
 }
