@@ -15,7 +15,6 @@ public class Ball extends Entitaet {
     private Spieler spieler;
     private KollisionsChecker kollisionsChecker;
     private boolean startBall;
-    private int leben;
 
     public Ball(GamePanel gp, KeyHandler keyH, Spieler spieler, KollisionsChecker kollisionsChecker) {
 
@@ -35,19 +34,16 @@ public class Ball extends Entitaet {
         geschwindigkeitY = 0;
         geschwindigkeit = 10;
         richtung = 1;
-        leben = 3;
         size = 15;
         startBall = false;
     }
 
-    @Override
-    public void update() {
+    public int update() {
         if (keyH.spacePressed) {
             startBall = true;
-            keyH.spacePressed = false;
         }
 
-        if (startBall && leben > 0) {
+        if (startBall) {
             geschwindigkeitX = Math.cos(richtung) * geschwindigkeit;
             geschwindigkeitY = Math.sin(richtung) * geschwindigkeit;
             x += geschwindigkeitX;
@@ -55,22 +51,12 @@ public class Ball extends Entitaet {
         } else {
             x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
         }
-        if (y > gp.screenHeight) {
-            leben--;
-            startBall = false;
-            resetRichtung();
-
-            if (leben > 0) {
-                x = (spieler.getPositionX() + gp.tileSize - (double) size / 2);
-                y = spieler.getPositionY() - size - 1;
-            }
-        }
 
         pruefeKollisionBallBildschirm();
 
         pruefeKollisionBallSpieler();
 
-        pruefeKollisionBallSteine();
+        return pruefeKollisionBallSteine();
     }
 
     public void pruefeKollisionBallBildschirm() {
@@ -101,19 +87,22 @@ public class Ball extends Entitaet {
             }
             korrigiereBallrichtung();
         }
+        gp.playSE(6);
     }
 
-    public void pruefeKollisionBallSteine() {
+    public int pruefeKollisionBallSteine() {
         int steinIndex = kollisionsChecker.ballKollidiertMitStein(this);
         if (!(steinIndex > -1)) {
-            return;
+            return -1;
         }
         if (kollisionsChecker.ballKollidiertMitSteinVonSeite(this, steinIndex)) {
             richtung = Math.PI - richtung;
         } else {
             richtung = -richtung;
         }
-        kollisionsChecker.entferneStein(steinIndex);
+        gp.stopMusic();
+        gp.playSE(7);
+        return steinIndex;
     }
 
     public void korrigiereBallrichtung() {
@@ -157,23 +146,20 @@ public class Ball extends Entitaet {
         return size;
     }
 
-    public int getLeben() {
-        return leben;
+    public void resetRichtung(double x) {richtung = x;}
+
+    public boolean getStartBall() {
+        return startBall;
     }
 
-    public void resetLeben() {leben = 3; }
-
-    public void resetRichtung() {richtung = 1;}
-
-    public void resetPosition() {
-        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
-        y = spieler.getPositionY() - size - 1;
-        startBall = false;
+    public void setStartBall(boolean startBall) {
+        this.startBall = startBall;
     }
 
     public void reset() {
-        resetLeben();
-        resetRichtung();
-        resetPosition();
+        resetRichtung(1);
+        x = spieler.getPositionX() + (double) gp.tileSize - (double) size / 2;
+        y = spieler.getPositionY() - size - 1;
+        startBall = false;
     }
 }

@@ -177,13 +177,18 @@ public class UI {
 
         //Mit ChatGPT vereinfacht...
         int ballSize = gp.tileSize / 2;
-        int startX = 0;
+        int startX = gp.tileSize;
         int y = gp.tileSize * 15 + gp.tileSize / 2;
 
         for (int i = 0; i < gp.game.getLeben(); i++) {
             g2.drawImage(ball1, startX + i * ballSize, y, ballSize, ballSize, null);
         }
-        //Ende
+
+        g2.setColor(Color.gray);
+        g2.fillRect(0, 0, gp.tileSize, gp.screenHeight);
+
+        g2.setColor(Color.gray);
+        g2.fillRect(gp.screenWidth - gp.tileSize, 0, gp.tileSize, gp.screenHeight);
     }
 
     public void drawGameOver() {

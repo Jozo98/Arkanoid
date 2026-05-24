@@ -112,12 +112,4 @@ public class KollisionsChecker {
             return false;
         }
     }
-    //Diese Methode hat hier eigentlich nichts verloren. Habe es hier drin gelassen,
-    //da ich sonst zu viel Code umschreiben müsste.
-    public void entferneStein(int steinIndex) {
-        Stein stein = steine.get(steinIndex);
-        steine.remove(steinIndex);
-        gp.removeSteinFromImage(stein);
-    }
-
 }

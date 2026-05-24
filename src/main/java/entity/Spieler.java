@@ -9,7 +9,7 @@ public class Spieler extends Entitaet {
 
     int startPosX = 288;
     int startPosY = 720;
-    int startGeschwindigkeit = 8;
+    int startGeschwindigkeit = 10;
 
     public Spieler(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -23,11 +23,10 @@ public class Spieler extends Entitaet {
         y = startPosY;
         geschwindigkeit = startGeschwindigkeit;
     }
-    @Override
     public void update() {
-        if (keyH.leftPressed) {
+        if (keyH.leftPressed && getPositionX() > gp.tileSize) {
             x -= geschwindigkeit;
-        } else if (keyH.rightPressed) {
+        } else if (keyH.rightPressed && getPositionX() < gp.screenWidth - 3 * gp.tileSize) {
             x += geschwindigkeit;
         }
     }

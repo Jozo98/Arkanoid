@@ -1,4 +1,6 @@
 package main;
+import entity.Ball;
+import entity.PowerUp;
 import entity.Stein;
 
 
@@ -6,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.VolatileImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -23,6 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     Game game;
     UI ui;
     KeyHandler keyH = new KeyHandler(this);
+    Sound sound = new Sound();
     GameStateManager gsm;
     Thread gameThread;
 
@@ -95,7 +99,14 @@ public class GamePanel extends JPanel implements Runnable {
         if (gsm.getGameState() == GameState.PLAY) {
             g2.drawImage(steineImage, 0, 0, null);
             game.getSpieler().draw(g2);
-            game.getBall().draw(g2);
+            ArrayList<Ball> balls = game.getBall();
+            for (Ball b : balls) {
+                b.draw(g2);
+            }
+            ArrayList<PowerUp> powerUps = game.getPowerUp();
+            for (PowerUp p : powerUps) {
+                p.draw(g2);
+            }
         }
         ui.draw(g2);
     }
@@ -135,5 +146,19 @@ public class GamePanel extends JPanel implements Runnable {
             steineImage.flush(); // release resources
         }
         buildSteineImage();
+    }
+
+    public void playMusic(int i) {
+        sound.setFile(i);
+        sound.play();
+        sound.loop();
+    }
+    public void stopMusic() {
+        sound.stop();
+    }
+
+    public void playSE(int i) {
+        sound.setFile(i);
+        sound.play();
     }
 }

@@ -13,6 +13,7 @@ public class GameStateManager {
         this.gp = gp;
         this.keyH = keyH;
         this.gameState = GameState.TITLE;
+        gp.playMusic(2);
     }
 
     public void updateGameState() throws IOException {
@@ -27,9 +28,11 @@ public class GameStateManager {
                 if (menuNum == 0) {
                     gp.game.startNewGame();
                     gameState = GameState.PLAY;
+                    gp.stopMusic();
                 } else if (menuNum == 1) {
                     gameState = GameState.PLAY;
                     gp.game.reset();
+                    gp.stopMusic();
                 } else if (menuNum == 2) {
                     gameState = GameState.EXIT;
                 }
@@ -39,6 +42,7 @@ public class GameStateManager {
                     gameState = GameState.GAME_OVER;
                 } else if (keyH.escapePressed) {
                     gameState = GameState.TITLE;
+                    gp.playMusic(2);
                 }
                 break;
             case GAME_OVER:
@@ -50,6 +54,7 @@ public class GameStateManager {
                     gameState = GameState.PLAY;
                 } else if (menuNum == 1) {
                     gameState = GameState.TITLE;
+                    gp.playMusic(2);
                 }
                 break;
 //            case LOAD:
