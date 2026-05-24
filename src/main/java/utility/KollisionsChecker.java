@@ -1,6 +1,7 @@
 package utility;
 
 import entity.Ball;
+import entity.PowerUp;
 import entity.Spieler;
 import entity.Stein;
 import main.GamePanel;
@@ -111,5 +112,12 @@ public class KollisionsChecker {
 
             return false;
         }
+    }
+
+    public boolean powerUpKollidiertMitSpieler(PowerUp powerUp) {
+            Rectangle powerUpRect = new Rectangle(powerUp.getPositionX(), powerUp.getPositionY(), gp.tileSize / 2, gp.tileSize / 2);
+            Rectangle spielerRect = new Rectangle(spieler.getPositionX(), spieler.getPositionY(), gp.tileSize * 2, gp.tileSize / 2);
+        return spielerRect.intersects(powerUpRect);
+
     }
 }

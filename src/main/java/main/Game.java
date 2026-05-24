@@ -45,12 +45,12 @@ public class Game {
             int steinIndex = ball.update();
 
             if (steinIndex != -1) {
-                PowerUpManager.aktivierePowerUps(steine.get(steinIndex), ball, this);
+                SteinManager.aktiviereStein(steine.get(steinIndex), ball, this);
                 entferneStein(steinIndex);
             }
 
             if (ball.getPositionY() > gp.screenHeight) {
-                if(balls.size() == 1) {
+                if (balls.size() == 1) {
                     leben--;
                     if (leben > 0) {
                         ball.reset();
@@ -60,17 +60,23 @@ public class Game {
                     }
                 } else {
                     toRemove.add(ball);
-            }
+                }
             }
         }
         balls.removeAll(toRemove);
         gp.keyH.spacePressed = false;
 
+        ArrayList<PowerUp> toRemovePowerUp = new ArrayList<>();
         size = powerUps.size();
         for (int i = 0; i < size; i++) {
             PowerUp powerUp = powerUps.get(i);
-            powerUp.update();
+            boolean getroffen = powerUp.update();
+            if (getroffen) {
+                PowerUpManager.aktivierePowerUp(powerUp, this);
+                toRemovePowerUp.add(powerUp);
+            }
         }
+        powerUps.removeAll(toRemovePowerUp);
     }
 
 
@@ -100,13 +106,11 @@ public class Game {
             int x = gp.tileSize + 4;
             y += 26;
             for (int j = 0; j < 11; j++) {
-                if(Levels.levels[aktuellesLevel][j + i*11] == 1) {
+                if (Levels.levels[aktuellesLevel][j + i * 11] == 1) {
                     steine.add(new Stein(gp, x, y, 0));
-                }
-                else if (Levels.levels[aktuellesLevel][j + i*11] == 2) {
+                } else if (Levels.levels[aktuellesLevel][j + i * 11] == 2) {
                     steine.add(new Stein(gp, x, y, 1));
-                }
-                else if (Levels.levels[aktuellesLevel][j + i*11] == 3) {
+                } else if (Levels.levels[aktuellesLevel][j + i * 11] == 3) {
                     steine.add(new Stein(gp, x, y, 2));
                 }
                 x += gp.tileSize + abstand;
@@ -115,13 +119,13 @@ public class Game {
     }
 
     public void entferneStein(int steinIndex) {
-            Stein stein = steine.get(steinIndex);
-            steine.remove(steinIndex);
-            gp.removeSteinFromImage(stein);
+        Stein stein = steine.get(steinIndex);
+        steine.remove(steinIndex);
+        gp.removeSteinFromImage(stein);
     }
 
     public void addBall(int x, int y) {
-        for(int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             Ball newBall = new Ball(gp, gp.keyH, spieler, kollisionsChecker);
             newBall.setPositionX(x);
             newBall.setPositionY(y);
@@ -133,7 +137,7 @@ public class Game {
     }
 
     public void addPowerUp(Stein stein) {
-        powerUps.add(new PowerUp(gp, gp.keyH, spieler, stein, kollisionsChecker));
+        powerUps.add(new PowerUp(gp, gp.keyH, spieler, stein, kollisionsChecker, stein.getType()));
     }
 
     public void startNewGame() throws IOException {
@@ -164,6 +168,10 @@ public class Game {
 
     public int getLeben() {
         return leben;
+    }
+
+    public void addLeben() {
+        leben++;
     }
 }
 
